@@ -33,6 +33,9 @@ void inputAdjMatrix(Graph* graph){
 
 int main(){
     system("chcp 65001");
+
+    //初始化
+
     Graph* graph = createGraph();
 
     inputFeatureMatrix(graph);
@@ -43,6 +46,34 @@ int main(){
     printAdjMatrix(graph);
     
     normalizeAdjMatrix(graph);
-    
+
+
+    //图卷积运算
+    aggregateFeatureMatrix(graph);
+
+    randomWeightMatrix(graph);
+    printWeightMatrix(graph);
+
+    double output[MAX_NODES][OUT_FEATURES];
+    linearTransform(graph, output);
+
+
+    //ReLU激活函数
+    for(int i = 0; i < graph->numNodes; i++){
+        for(int j = 0; j < OUT_FEATURES; j++){
+            if(output[i][j] < 0) output[i][j] = 0;
+        }
+    }
+
+    // 打印结果
+    printf("线性变换后的特征矩阵：\n");
+    for(int i = 0; i < graph->numNodes; i++) {
+        for(int j = 0; j < OUT_FEATURES; j++) {
+            printf("%.2lf ", output[i][j]);
+        }
+        printf("\n");
+    }
+
+
     return 0;
 }
