@@ -1,5 +1,5 @@
 #include "gcn.h"
-
+#include "TsMatrix.h"
 
 // 输入特征矩阵
 void inputFeatureMatrix(Graph* graph){
@@ -41,11 +41,8 @@ int main(){
 
     printFeatureGraph(graph);
     printAdjMatrix(graph);
-    selfLoop(graph);
-
-    printAdjMatrix(graph);
     
-    computeDegreeMatrix(graph);
-    printDegreeMatrix(graph);
+    normalizeAdjMatrix(graph);
+    
     return 0;
 }

@@ -1,4 +1,6 @@
 #include "gcn.h"
+#include "TsMatrix.h"
+#include<math.h>
 
 Graph* createGraph(){
     Graph* graph = (Graph*)malloc(sizeof(Graph));
@@ -25,6 +27,17 @@ void printAdjMatrix(Graph* graph){
     for(int i = 0; i < graph->numNodes; i++){
         for(int j = 0; j < graph->numNodes; j++){
             printf("%d ", graph->adjacencyMatrix[i][j]);
+        }
+        printf("\n");
+    }
+    printf("\n");
+}
+
+void printNormalizedAdjMatrix(Graph* graph){
+    printf("归一化邻接矩阵：\n");
+    for(int i = 0; i < graph->numNodes; i++){
+        for(int j = 0; j < graph->numNodes; j++){
+            printf("%.2lf ", graph->normalizedAdjMatrix[i][j]);
         }
         printf("\n");
     }
@@ -62,3 +75,48 @@ void computeDegreeMatrix(Graph* graph){
         graph->degreeMatrix[i][i] = degree;
     }
 }
+
+void computeDegreeMatrix2(Graph* graph){
+    for(int i = 0; i < graph->numNodes; i++){
+        graph->degreeMatrix2[i][i] = 1/sqrt(graph->degreeMatrix[i][i]);
+    }
+}
+
+void normalizeAdjMatrix(Graph* graph){
+    //加上自环
+    selfLoop(graph);
+    //printAdjMatrix(graph);
+
+    //计算度矩阵
+    computeDegreeMatrix(graph);
+    //printDegreeMatrix(graph);
+    //计算度矩阵的逆矩阵的平方根
+    computeDegreeMatrix2(graph);
+    //printDegreeMatrix2(graph);
+
+    //计算归一化邻接矩阵
+    //将邻接矩阵转换为三元组顺序表
+    TsMatrix* tsMatrix1 = createTsMatrix();
+    intMatrixToTsMatrix(tsMatrix1, graph->adjacencyMatrix);
+    printTsMatrix(tsMatrix1);
+
+    //将度矩阵的逆矩阵的平方根转换为三元组顺序表
+    TsMatrix* tsMatrix2 = createTsMatrix();
+    doubleMatrixToTsMatrix(tsMatrix2, graph->degreeMatrix2);
+    printTsMatrix(tsMatrix2);
+
+    //计算归一化邻接矩阵 第一步乘法
+    TsMatrix* result1 = createTsMatrix();
+    tsMatrixMul(tsMatrix1, tsMatrix2, result1);
+    printTsMatrix(result1);
+
+    //计算归一化邻接矩阵 第二步乘法
+    TsMatrix* result2 = createTsMatrix();
+    tsMatrixMul(result1, tsMatrix2, result2);
+    printTsMatrix(result2);
+
+    //将归一化邻接矩阵转换为二维数组
+    tsMatrixToDoubleMatrix(result2, graph->normalizedAdjMatrix);
+    printNormalizedAdjMatrix(graph);
+}
+

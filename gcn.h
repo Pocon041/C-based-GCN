@@ -9,9 +9,11 @@
 #define MAX_FEATURES 100
 
 //数据集
+
 typedef struct Node{
     double features[MAX_FEATURES];  //特征向量
 }Node;
+
 
 typedef struct Graph{
     int featureNum; //特征维度
@@ -20,6 +22,7 @@ typedef struct Graph{
     int adjacencyMatrix[MAX_NODES][MAX_NODES]; //邻接矩阵
     double normalizedAdjMatrix[MAX_NODES][MAX_NODES]; //归一化邻接矩阵
     int degreeMatrix[MAX_NODES][MAX_NODES]; //度矩阵
+    double degreeMatrix2[MAX_NODES][MAX_NODES]; //度矩阵的逆矩阵的平方根
 }Graph;
 
 //操作集
@@ -28,11 +31,13 @@ Graph* createGraph(void);
 void printFeatureGraph(Graph* graph);
 void printAdjMatrix(Graph* graph);
 void printDegreeMatrix(Graph* graph);
+void printNormalizedAdjMatrix(Graph* graph);
 
 void addEdge(Graph* graph, int node1, int node2);
 
 void selfLoop(Graph* graph);
 void computeDegreeMatrix(Graph* graph);
+void computeDegreeMatrix2(Graph* graph);
 void normalizeAdjMatrix(Graph* graph);
 
 void freeGraph(Graph* graph);
