@@ -70,9 +70,10 @@ void tsMatrixToIntMatrix(TsMatrix* tsMatrix, int matrix[MAX_NODES][MAX_NODES]){
 }
 
 void doubleMatrixToTsMatrix(TsMatrix* tsMatrix, double matrix[MAX_NODES][MAX_NODES]){
-     // 设置矩阵的行数和列数
+    // 设置矩阵的行数和列数
     tsMatrix->rows = MAX_NODES;
     tsMatrix->cols = MAX_NODES;
+    tsMatrix->nums = 0;  // 重置非零元素计数
     
     // 初始化rpos数组
     for(int i = 0; i < MAX_ROW_NUM; i++) {
@@ -83,7 +84,7 @@ void doubleMatrixToTsMatrix(TsMatrix* tsMatrix, double matrix[MAX_NODES][MAX_NOD
     int rowCount[MAX_ROW_NUM] = {0};
     for(int i = 0; i < tsMatrix->rows; i++){
         for(int j = 0; j < tsMatrix->cols; j++){
-            if(matrix[i][j] != 0){
+            if(fabs(matrix[i][j]) > 1e-10){  // 使用一个小的阈值来判断非零
                 rowCount[i]++;
             }
         }
@@ -98,7 +99,7 @@ void doubleMatrixToTsMatrix(TsMatrix* tsMatrix, double matrix[MAX_NODES][MAX_NOD
     // 存储非零元素
     for(int i = 0; i < tsMatrix->rows; i++){
         for(int j = 0; j < tsMatrix->cols; j++){
-            if(matrix[i][j] != 0){
+            if(fabs(matrix[i][j]) > 1e-10){  // 使用一个小的阈值来判断非零
                 tsMatrix->data[tsMatrix->nums].cow = i;
                 tsMatrix->data[tsMatrix->nums].col = j;
                 tsMatrix->data[tsMatrix->nums].d = matrix[i][j];
@@ -106,6 +107,11 @@ void doubleMatrixToTsMatrix(TsMatrix* tsMatrix, double matrix[MAX_NODES][MAX_NOD
             }
         }
     }
+    
+    // 打印调试信息
+    printf("\n矩阵转换信息：\n");
+    printf("矩阵维度：(%d,%d)\n", tsMatrix->rows, tsMatrix->cols);
+    printf("非零元素个数：%d\n", tsMatrix->nums);
 }
 
 void tsMatrixToDoubleMatrix(TsMatrix* tsMatrix, double matrix[MAX_NODES][MAX_NODES]){
@@ -122,11 +128,15 @@ void tsMatrixToDoubleMatrix(TsMatrix* tsMatrix, double matrix[MAX_NODES][MAX_NOD
 void tsMatrixMul(TsMatrix* tsMatrix1, TsMatrix* tsMatrix2, TsMatrix* result) {
     // 检查矩阵是否可以相乘
     if(tsMatrix1->cols != tsMatrix2->rows) {
+        printf("矩阵维度不匹配：(%d,%d) * (%d,%d)\n", 
+               tsMatrix1->rows, tsMatrix1->cols, 
+               tsMatrix2->rows, tsMatrix2->cols);
         return;
     }
     
     // 检查是否有零矩阵
     if(tsMatrix1->nums == 0 || tsMatrix2->nums == 0) {
+        printf("存在零矩阵\n");
         return;
     }
     
@@ -163,6 +173,7 @@ void tsMatrixMul(TsMatrix* tsMatrix1, TsMatrix* tsMatrix2, TsMatrix* result) {
         // 处理当前行的每个非零元素
         for(int p = tsMatrix1->rpos[arow]; p < tp; p++) {
             int brow = tsMatrix1->data[p].col;
+            double weight = tsMatrix1->data[p].d;  // 获取权重
             
             // 确定tsMatrix2中对应行的结束位置
             int t;
@@ -175,14 +186,15 @@ void tsMatrixMul(TsMatrix* tsMatrix1, TsMatrix* tsMatrix2, TsMatrix* result) {
             // 计算乘积
             for(int q = tsMatrix2->rpos[brow]; q < t; q++) {
                 int ccol = tsMatrix2->data[q].col;
-                ctemp[ccol] += tsMatrix1->data[p].d * tsMatrix2->data[q].d;
+                ctemp[ccol] += weight * tsMatrix2->data[q].d;
             }
         }
         
         // 将非零元素存入结果矩阵
         for(int ccol = 0; ccol < result->cols; ccol++) {
-            if(ctemp[ccol] != 0) {
+            if(fabs(ctemp[ccol]) > 1e-10) {  // 使用一个小的阈值来判断非零
                 if(result->nums >= MAX_NODES) {
+                    printf("结果矩阵超出最大容量\n");
                     return;
                 }
                 result->data[result->nums].cow = arow;
@@ -192,6 +204,11 @@ void tsMatrixMul(TsMatrix* tsMatrix1, TsMatrix* tsMatrix2, TsMatrix* result) {
             }
         }
     }
+    
+    // 打印调试信息
+    printf("\n矩阵乘法结果：\n");
+    printf("结果矩阵维度：(%d,%d)\n", result->rows, result->cols);
+    printf("非零元素个数：%d\n", result->nums);
 }
 
 

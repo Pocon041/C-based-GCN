@@ -10,12 +10,15 @@
 #define MAX_NODES 100
 #define MAX_FEATURES 100
 
-#define OUT_FEATURES 5 //输出特征维度
+#define OUT_FEATURES 3 //输出特征维度
+#define LEARNING_RATE 0.01 //学习率
+#define MOMENTUM_RATE 0.9   // 保持动量率
 
 //数据集
 
 typedef struct Node{
     double features[MAX_FEATURES];  //特征向量
+    double labels[OUT_FEATURES];    //标签
 }Node;
 
 
@@ -33,6 +36,8 @@ typedef struct Graph{
 
 //操作集
 Graph* createGraph(void);
+
+bool isConnected(Graph* graph);
 
 void printFeatureGraph(Graph* graph);
 void printAdjMatrix(Graph* graph);
@@ -52,6 +57,12 @@ void randomWeightMatrix(Graph* graph);
 
 void aggregateFeatureMatrix(Graph* graph);
 void linearTransform(Graph* graph,double output[MAX_NODES][OUT_FEATURES]); 
+
+// 反向传播相关函数
+double computeLoss(Graph* graph, double output[MAX_NODES][OUT_FEATURES]);
+void computeGradients(Graph* graph, double output[MAX_NODES][OUT_FEATURES], double gradients[MAX_FEATURES][OUT_FEATURES]);
+void updateWeight(Graph* graph, double gradients[MAX_FEATURES][OUT_FEATURES]);
+void backward(Graph* graph, double output[MAX_NODES][OUT_FEATURES]);
 
 void freeGraph(Graph* graph);
 
