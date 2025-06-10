@@ -109,9 +109,9 @@ void doubleMatrixToTsMatrix(TsMatrix* tsMatrix, double matrix[MAX_NODES][MAX_NOD
     }
     
     // 打印调试信息
-    printf("\n矩阵转换信息：\n");
-    printf("矩阵维度：(%d,%d)\n", tsMatrix->rows, tsMatrix->cols);
-    printf("非零元素个数：%d\n", tsMatrix->nums);
+    //printf("\n矩阵转换信息：\n");
+    //printf("矩阵维度：(%d,%d)\n", tsMatrix->rows, tsMatrix->cols);
+    //printf("非零元素个数：%d\n", tsMatrix->nums);
 }
 
 void tsMatrixToDoubleMatrix(TsMatrix* tsMatrix, double matrix[MAX_NODES][MAX_NODES]){
@@ -206,9 +206,9 @@ void tsMatrixMul(TsMatrix* tsMatrix1, TsMatrix* tsMatrix2, TsMatrix* result) {
     }
     
     // 打印调试信息
-    printf("\n矩阵乘法结果：\n");
-    printf("结果矩阵维度：(%d,%d)\n", result->rows, result->cols);
-    printf("非零元素个数：%d\n", result->nums);
+    //printf("\n矩阵乘法结果：\n");
+    //printf("结果矩阵维度：(%d,%d)\n", result->rows, result->cols);
+    //printf("非零元素个数：%d\n", result->nums);
 }
 
 

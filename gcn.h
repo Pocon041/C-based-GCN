@@ -10,7 +10,7 @@
 #define MAX_NODES 100
 #define MAX_FEATURES 100
 
-#define OUT_FEATURES 3 //输出特征维度
+#define OUT_FEATURES 4 //输出特征维度
 #define LEARNING_RATE 0.01 //学习率
 #define MOMENTUM_RATE 0.9   // 保持动量率
 

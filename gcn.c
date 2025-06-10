@@ -142,16 +142,17 @@ void normalizeAdjMatrix(Graph* graph){
 
     //计算度矩阵的逆矩阵的平方根
     computeDegreeMatrix2(graph);
-    printf("\n度矩阵的逆矩阵平方根：\n");
-    for(int i = 0; i < graph->numNodes; i++){
-        for(int j = 0; j < graph->numNodes; j++){
-            printf("%.6f ", graph->degreeMatrix2[i][j]);
-        }
-        printf("\n");
-    }
+    //printf("\n度矩阵的逆矩阵平方根：\n");
+    //for(int i = 0; i < graph->numNodes; i++){
+    //    for(int j = 0; j < graph->numNodes; j++){
+    //        printf("%.6f ", graph->degreeMatrix2[i][j]);
+    //    }
+    //    printf("\n");
+    //}
 
     //计算归一化邻接矩阵
     //将邻接矩阵转换为三元组顺序表
+    printf("----------计算归一化邻接矩阵----------\n");
     TsMatrix* tsMatrix1 = createTsMatrix();
     intMatrixToTsMatrix(tsMatrix1, graph->adjacencyMatrix);
     printf("\n邻接矩阵的三元组表示：\n");
@@ -233,12 +234,12 @@ void computeGradients(Graph* graph, double output[MAX_NODES][OUT_FEATURES], doub
     }
 
     // 打印梯度信息（调试用）
-    printf("\n梯度信息：\n");
-    for(int i = 0; i < graph->featureNum; i++){
-        for(int j = 0; j < OUT_FEATURES; j++){
-            printf("梯度[%d][%d]: %.6f\n", i, j, gradients[i][j]);
-        }
-    }
+    //printf("\n梯度信息：\n");
+    //for(int i = 0; i < graph->featureNum; i++){
+    //    for(int j = 0; j < OUT_FEATURES; j++){
+    //          printf("梯度[%d][%d]: %.6f\n", i, j, gradients[i][j]);
+    //    }
+    //}
 }
 
 // 添加批量归一化
@@ -294,9 +295,9 @@ void aggregateFeatureMatrix(Graph* graph){
     printTsMatrix(tsMatrix2);
 
     // 打印矩阵维度信息
-    printf("\n矩阵维度信息：\n");
-    printf("归一化邻接矩阵：(%d,%d)\n", tsMatrix1->rows, tsMatrix1->cols);
-    printf("特征矩阵：(%d,%d)\n", tsMatrix2->rows, tsMatrix2->cols);
+    //printf("\n矩阵维度信息：\n");
+    //printf("归一化邻接矩阵：(%d,%d)\n", tsMatrix1->rows, tsMatrix1->cols);
+    //printf("特征矩阵：(%d,%d)\n", tsMatrix2->rows, tsMatrix2->cols);
 
     TsMatrix* result = createTsMatrix();
     tsMatrixMul(tsMatrix1, tsMatrix2, result);
@@ -328,13 +329,13 @@ void linearTransform(Graph* graph, double output[MAX_NODES][OUT_FEATURES]){
     }
 
     // 打印线性变换后的输出（调试用）
-    printf("\n线性变换后的输出：\n");
-    for(int i = 0; i < graph->numNodes; i++) {
-        for(int j = 0; j < OUT_FEATURES; j++) {
-            printf("%.6f ", output[i][j]);
-        }
-        printf("\n");
-    }
+    //printf("\n线性变换后的输出：\n");
+    //for(int i = 0; i < graph->numNodes; i++) {
+    //    for(int j = 0; j < OUT_FEATURES; j++) {
+    //        printf("%.6f ", output[i][j]);
+    //    }
+    //    printf("\n");
+    //}
 
     // 应用批量归一化
     batchNormalize(graph, output);
@@ -368,7 +369,7 @@ void backward(Graph* graph, double output[MAX_NODES][OUT_FEATURES]) {
 
     // 计算损失
     loss = computeLoss(graph, output);
-    printf("当前损失值: %.6f\n", loss);
+    //printf("当前损失值: %.6f\n", loss);
 
     // 计算梯度
     computeGradients(graph, output, gradients);

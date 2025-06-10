@@ -56,11 +56,11 @@ int main(){
     normalizeAdjMatrix(graph);
 
     // 训练参数
-    int epochs = 200;
+    int epochs = 2;
     double output[MAX_NODES][OUT_FEATURES];
     double best_loss = 1e10;
     int no_improve = 0;
-    const int patience = 10;  // 早停耐心值
+    const int patience = 20;  // 早停耐心值
 
     // 训练循环
     for(int epoch = 0; epoch < epochs; epoch++) {
@@ -105,7 +105,7 @@ int main(){
 
         // 打印当前状态
         printf("当前损失值: %.6f (最佳: %.6f)\n", current_loss, best_loss);
-        printf("当前权重矩阵：\n");
+        //printf("当前权重矩阵：\n");
         printWeightMatrix(graph);
 
         // 早停
